@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { ShieldAlert, Video, CircleCheck, CircleAlert, Monitor, ArrowRight, UserCheck, ShieldCheck } from "lucide-react";
 import { CameraProctor } from "./CameraProctor";
+import { apiService } from "../api";
 
 interface ReadyScreenProps {
   onStartAssessment: (name: string, employeeId: string) => void;
@@ -55,32 +56,19 @@ export const ReadyScreen: React.FC<ReadyScreenProps> = ({ onStartAssessment, onO
     const cleanId = employeeId.trim().toUpperCase();
 
     try {
-      const res = await fetch(`/api/candidates/check/${cleanId}`);
-      if (res.ok) {
-        const check = await res.json();
-        if (check.exists && check.completed) {
-          setIdErrorMsg("You have already completed this certification.");
-          setCheckingId(false);
-          return;
-        }
+      const check = await apiService.checkCandidate(cleanId);
+      if (check.exists && check.completed) {
+        setIdErrorMsg("You have already completed this certification.");
+        setCheckingId(false);
+        return;
       }
 
       // If checks pass, register on database
-      const regRes = await fetch("/api/candidates/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), employeeId: cleanId }),
-      });
-
-      if (regRes.ok) {
-        setIsRegistered(true);
-      } else {
-        const errorData = await regRes.json();
-        setIdErrorMsg(errorData.error || "Registry registration failed.");
-      }
-    } catch (err) {
+      await apiService.registerCandidate(name.trim(), cleanId);
+      setIsRegistered(true);
+    } catch (err: any) {
       console.error("Verification error:", err);
-      setIdErrorMsg("Database network connection failure.");
+      setIdErrorMsg(err.message || "Database network connection failure.");
     } finally {
       setCheckingId(false);
     }

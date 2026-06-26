@@ -60,9 +60,9 @@ body {
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # 3. Path Resolution
-# Resolves the build output directory ('dist') of the React Vite compilation.
+# Resolves the build output directory ('static') of the React Vite compilation.
 parent_dir = os.path.dirname(os.path.abspath(__file__))
-build_dir = os.path.join(parent_dir, "dist")
+build_dir = os.path.join(parent_dir, "static")
 
 # 4. Streamlit Render Logic
 if not os.path.exists(build_dir) or not os.path.exists(os.path.join(build_dir, "index.html")):
@@ -72,8 +72,9 @@ if not os.path.exists(build_dir) or not os.path.exists(os.path.join(build_dir, "
         "To run this fully interactive React application inside Streamlit, you must first compile the production assets.\n\n"
         "**Steps to get started:**\n"
         "1. Open your terminal in this project root.\n"
-        "2. Run the build command:\n"
+        "2. Run the install and build commands:\n"
         "   ```bash\n"
+        "   npm install\n"
         "   npm run build\n"
         "   ```\n"
         "3. Once complete, run this Streamlit host script:\n"
@@ -82,13 +83,11 @@ if not os.path.exists(build_dir) or not os.path.exists(os.path.join(build_dir, "
         "   ```"
     )
 else:
-    # Declare the custom component using Streamlit's official API.
-    # When initialized with a 'path', Streamlit automatically spins up a background file server
-    # for the static directory and hosts it as an isolated iframe component.
-    lenovo_registry = components.declare_component(
-        "lenovo_registry_component",
-        path=build_dir
+    # Render the React application via Streamlit's built-in static file serving iframe.
+    # This is 100% reliable, avoids any "custom component loading" latency/errors,
+    # and handles routing, CSS, and javascript bundles perfectly.
+    components.iframe(
+        src="/app/static/index.html",
+        height=1000,
+        scrolling=True
     )
-    
-    # Render the custom component as the primary view
-    lenovo_registry()

@@ -219,11 +219,17 @@ export const CameraProctor: React.FC<CameraProctorProps> = ({
       setFacesCount(detectedPersons);
       setPhoneDetected(phoneFound);
 
+      // Handle face detection callback regardless of whether assessment is active
+      if (detectedPersons === 0) {
+        onFaceDetectedChange(false);
+      } else {
+        onFaceDetectedChange(true);
+      }
+
       // Handle Proctor Violations based on frame metrics
       if (lastActiveRef.current) {
         // Face detection changes
         if (detectedPersons === 0) {
-          onFaceDetectedChange(false);
           // Start no face timer
           if (noFaceTimer.current === null) {
             noFaceTimer.current = Date.now();
@@ -236,7 +242,6 @@ export const CameraProctor: React.FC<CameraProctorProps> = ({
           }
           triggerPenalty("No Face Detected", "No face visible in camera frame", 5, 3);
         } else {
-          onFaceDetectedChange(true);
           noFaceTimer.current = null; // reset
         }
 

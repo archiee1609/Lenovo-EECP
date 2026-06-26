@@ -12,6 +12,7 @@ import { Assessment } from "./components/Assessment";
 import { CameraProctor } from "./components/CameraProctor";
 import { Certificate } from "./components/Certificate";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { apiService } from "./api";
 
 export default function App() {
   const [page, setPage] = useState<"ready" | "assessment" | "disqualified" | "result" | "admin">("ready");
@@ -50,11 +51,8 @@ export default function App() {
   useEffect(() => {
     async function loadQuestions() {
       try {
-        const res = await fetch("/api/questions");
-        if (res.ok) {
-          const data = await res.json();
-          setQuestions(data);
-        }
+        const data = await apiService.getQuestions();
+        setQuestions(data);
       } catch (err) {
         console.error("Error loading questions from API:", err);
       } finally {
@@ -126,11 +124,7 @@ export default function App() {
     };
 
     try {
-      await fetch("/api/candidates/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resultPayload),
-      });
+      await apiService.submitAssessment(resultPayload);
     } catch (e) {
       console.error("Disqualification submit error:", e);
     }
@@ -175,11 +169,7 @@ export default function App() {
     };
 
     try {
-      await fetch("/api/candidates/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resultPayload),
-      });
+      await apiService.submitAssessment(resultPayload);
     } catch (e) {
       console.error("Submission error:", e);
     }

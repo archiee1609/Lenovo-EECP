@@ -23,6 +23,7 @@ import {
   LogOut
 } from "lucide-react";
 import { AssessmentResult, AdminAnalytics } from "../types";
+import { apiService } from "../api";
 
 interface AdminDashboardProps {
   onClose: () => void;
@@ -40,18 +41,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const q = encodeURIComponent(searchTerm);
-      const [resAssessments, resAnalytics] = await Promise.all([
-        fetch(`/api/admin/assessments?q=${q}`),
-        fetch("/api/admin/analytics"),
+      const [dataAssessments, dataAnalytics] = await Promise.all([
+        apiService.getAssessments(searchTerm),
+        apiService.getAnalytics(),
       ]);
 
-      if (resAssessments.ok && resAnalytics.ok) {
-        const dataAssessments = await resAssessments.json();
-        const dataAnalytics = await resAnalytics.json();
-        setAssessments(dataAssessments);
-        setAnalytics(dataAnalytics);
-      }
+      setAssessments(dataAssessments);
+      setAnalytics(dataAnalytics);
     } catch (error) {
       console.error("Error fetching admin data:", error);
     } finally {
@@ -67,12 +63,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   const handleResetDatabase = async () => {
     if (!window.confirm("CRITICAL WARNING: Are you sure you want to permanently clear all candidate results and records? This action cannot be undone.")) return;
     try {
-      const res = await fetch("/api/admin/clear", { method: "POST" });
-      if (res.ok) {
-        alert("Database cleared successfully.");
-        fetchData();
-        setSelectedResult(null);
-      }
+      await apiService.clearDatabase();
+      alert("Database cleared successfully.");
+      fetchData();
+      setSelectedResult(null);
     } catch (err) {
       console.error("Reset database failed:", err);
     }
