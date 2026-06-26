@@ -57,7 +57,7 @@ body {
 }
 </style>
 """
-st.markdown(hide_streamlit_style, unsafe_allowed_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # 3. Path Resolution
 # Resolves the build output directory ('dist') of the React Vite compilation.
