@@ -92,3 +92,5 @@ The application integrates full verification testing endpoints. To test manually
 | **Keyboard Type** | Press key during click-only exam | Key intercepted. Score reduced by 10 points. |
 | **Score Termination** | Accumulate <60 Integrity points | Immediate stoppage. Disqualification view rendered. Reattempt blocked. |
 | **Certification Pass** | Get ≥90% Tech & ≥60% Integrity | Award Lenovo Elite Engineer title and unlock PDF download. |
+
+## DEVELOPED BY ARCHIMAN CHAKRABORTY - Lenovo BLR_Training Team
