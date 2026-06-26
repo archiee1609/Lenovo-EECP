@@ -1,0 +1,6 @@
+{
+  "name": "Lenovo Elite Engineer Certification Program",
+  "description": "An AI-powered virtual proctor and avatar-led certification platform for Lenovo Field Engineers.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

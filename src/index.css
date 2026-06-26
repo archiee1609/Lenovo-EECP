@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --color-brand-red: #E2231A;
+  --color-dark-charcoal: #121212;
+}
+
+@layer utilities {
+  .tracking-widest-plus {
+    letter-spacing: 0.15em;
+  }
+}
